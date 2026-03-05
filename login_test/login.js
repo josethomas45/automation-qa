@@ -6,24 +6,18 @@ async function loginTest() {
 
     try {
 
-        // 1️⃣ Open website
         await driver.get("https://cse.lms.sjcetpalai.ac.in/login/index.php");
 
-        // 2️⃣ Find username field
         let username = await driver.findElement(By.id("username"));
 
-        // 3️⃣ Find password field
         let password = await driver.findElement(By.id("password"));
 
-        // 4️⃣ Enter login details
         await username.sendKeys("josethomas2026@cs.sjcetpalai.ac.in");
         await password.sendKeys("Sjcet@123#");
 
-        // 5️⃣ Click login button
         let loginButton = await driver.findElement(By.id("loginbtn"));
         await loginButton.click();
 
-        // Wait until redirected to /my/
         await driver.wait(until.urlContains("/my/"), 40000);
 
         console.log("Login Successful ✅");
