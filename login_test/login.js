@@ -16,15 +16,15 @@ async function loginTest() {
         let password = await driver.findElement(By.id("password"));
 
         // 4️⃣ Enter login details
-        await username.sendKeys("testuser");
-        await password.sendKeys("123456");
+        await username.sendKeys("josethomas2026@cs.sjcetpalai.ac.in");
+        await password.sendKeys("Sjcet@123#");
 
         // 5️⃣ Click login button
-        let loginButton = await driver.findElement(By.id("login"));
+        let loginButton = await driver.findElement(By.id("loginbtn"));
         await loginButton.click();
 
-        // 6️⃣ Wait until dashboard loads
-        await driver.wait(until.urlContains("dashboard"), 5000);
+        // Wait until redirected to /my/
+        await driver.wait(until.urlContains("/my/"), 40000);
 
         console.log("Login Successful ✅");
 
