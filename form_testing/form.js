@@ -1,32 +1,51 @@
 const { Builder, By, until } = require('selenium-webdriver');
+const chrome = require('selenium-webdriver/chrome');
 
 async function loginTest() {
-    let driver = await new Builder().forBrowser('chrome').build();
+
+    let options = new chrome.Options();
+    options.addArguments("--incognito");
+
+    let driver = await new Builder()
+        .forBrowser('chrome')
+        .setChromeOptions(options)
+        .build();
 
     try {
-        // Open the login page
+
         await driver.get('https://the-internet.herokuapp.com/login');
         await driver.manage().window().maximize();
 
-        // Wait for the username field and enter credentials
-        await driver.wait(until.elementLocated(By.css('#username')), 5000);
-        await driver.findElement(By.css('#username')).sendKeys('tomsmith');
-        await driver.findElement(By.css('#password')).sendKeys('SuperSecretPassword!');
+        await driver.wait(until.elementLocated(By.id('username')), 5000);
+        await driver.findElement(By.id('username')).sendKeys('tomsmith');
 
-        // Click the login button
+        await driver.findElement(By.id('password')).sendKeys('SuperSecretPassword!');
+
         await driver.findElement(By.css('button[type="submit"]')).click();
 
-        // Wait for success message
         await driver.wait(until.elementLocated(By.css('.flash.success')), 5000);
-        const message = await driver.findElement(By.css('.flash.success')).getText();
-        console.log('Login successful! Message:', message.trim());
 
-        await driver.sleep(3000);
+        console.log("Login successful");
+
+        // Wait for logout button
+        let logoutBtn = await driver.wait(
+            until.elementLocated(By.css('.button.secondary.radius')),
+            5000
+        );
+
+        await driver.wait(until.elementIsVisible(logoutBtn), 5000);
+
+        await logoutBtn.click();
+
+        await driver.wait(until.urlContains('/login'), 5000);
+
+        console.log("Logout successful");
+
     } catch (err) {
-        console.error('Login failed:', err.message);
-    } finally {
-        await driver.quit();
+        console.error("Test failed:", err);
     }
+
+    await driver.quit();
 }
 
 loginTest();
